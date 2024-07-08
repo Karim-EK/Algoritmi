@@ -26,12 +26,12 @@ struct nodo {
 };
 typedef struct nodo nodo;
 
-nodo visitati[];
+nodo *visitati;
 int contaVisitati = 0;
-nodo daVisitare[];
+nodo *daVisitare;
 
 void initialization();
-void dijkstra(nodo* graph);
+void dijkstra(nodo** graph);
 void vicini(int i, int j);
 nodo heapExtractMin(nodo* heap);
 void minHeapify(nodo* heap, int i);
@@ -66,6 +66,11 @@ int main(int argc, char *argv[])
             graph[i] = (nodo*)malloc(nColonne * sizeof(nodo));
         }
 
+        visitati = (nodo*)malloc(nRighe*nColonne *sizeof(nodo));
+        daVisitare = (nodo*)malloc(nRighe*nColonne *sizeof(nodo));
+        arraySize = nRighe * nColonne;
+        heapSize = 0;
+
         k = 0;
 
         for(i = 0; i < nRighe; i++){
@@ -80,17 +85,10 @@ int main(int argc, char *argv[])
         }
         graph[0][0].d = 0;
 
-    /*Heap e array*/
-
-    visitati = (nodo*)malloc(nRighe*nColonne *sizeof(nodo));
-    daVisitare = (nodo*)malloc(nRighe*nColonne *sizeof(nodo));
-    arraySize = nRighe * nColonne;
-    heapSize = 0;
-
 	fclose(file);
 	return 0;
 }
-void dijkstra(nodo* graph){
+void dijkstra(nodo** graph){
     int i = 0;
     nodo minVertex;
     while(heapSize != 0){
@@ -101,7 +99,7 @@ void dijkstra(nodo* graph){
             relax(minVertex, graph[arrayCoordinate[i]][arrayCoordinate[i+1]]);
             i += 2;
         }
-        while(arrayCoordinate[i] =! -1);
+        while((arrayCoordinate[i] =! -1));
     }
 }
 void vicini(int i, int j){
@@ -115,10 +113,10 @@ void vicini(int i, int j){
     arrayCoordinate = {-1, -1, -1, -1, -1, -1, -1, -1};
 
     for (d = 0; d < 4; d++) {
-        ni = i + direzioni[d][0]; // coordinata i del vicino
-        nj = j + direzioni[d][1]; // coordinata j del vicino
+        ni = i + direzioni[d][0];
+        nj = j + direzioni[d][1];
 
-        // Verifichiamo se il vicino è all'interno dei limiti della matrice
+
         if (ni >= 0 && ni < nRighe && nj >= 0 && nj < nColonne) {
             arrayCoordinate[k] = ni;
             arrayCoordinate[k + 1] = nj;
