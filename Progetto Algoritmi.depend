@@ -1,5 +1,11 @@
 # depslib dependency file v1.0
-1720191643 source:c:\users\20kar\onedrive\desktop\progetto algoritmi\main.c
+1720823766 source:c:\users\20kar\onedrive\desktop\progetto algoritmi\main.c
 	<stdio.h>
 	<stdlib.h>
+	<limits.h>
+
+1720824424 source:c:\users\20kar\onedrive\desktop\progetto algoritmi\0001041761.c
+	<stdio.h>
+	<stdlib.h>
+	<limits.h>
 

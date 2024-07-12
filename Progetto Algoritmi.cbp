@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters='&quot;C:\Users\20kar\Downloads\test0.in&quot;' />
+				<Option parameters='&quot;C:\Users\20kar\Downloads\test5.in&quot;' />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -32,7 +32,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="main.c">
+		<Unit filename="0001041761.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>
