@@ -13,7 +13,7 @@ int costoFisso;
 int moltiplicatoreCosto;
 int heapSize;
 int arraySize;
-int arrayCoordinate[8];
+int arrayCoordinate[9];
 int nRighe;
 int nColonne;
 
@@ -79,11 +79,15 @@ int main(int argc, char *argv[])
         graph[i] = (nodo*)malloc(nColonne * sizeof(nodo));
     }
 
-    visitati = (nodo*)malloc(nRighe*nColonne *sizeof(nodo));
-    daVisitare = (nodo*)malloc((nRighe*nColonne + 1) *sizeof(nodo));
+    visitati = (nodo*)calloc(nRighe*nColonne, sizeof(nodo));
+    daVisitare = (nodo*)calloc((nRighe*nColonne + 1), sizeof(nodo));
     daVisitare[0] = empty;
     arraySize = nRighe * nColonne;
     heapSize = 0;
+
+    for (i = 0; i < 9; i++) {
+    arrayCoordinate[i] = -1;
+    }
 
     k = 1;
 
@@ -112,7 +116,11 @@ int main(int argc, char *argv[])
 
     printPath(&end);
     printf("-1 -1\n");
-    printf("%d",end.d+costoFisso);
+    printf("%ld",end.d+costoFisso);
+
+    for (i = 0; i < nRighe; i++) {
+        free(graph[i]);
+    }
 
     free(graph);
     free(daVisitare);
@@ -127,15 +135,20 @@ void dijkstra(nodo** graph){
     while(heapSize > 1){
         int i = 0;
         minVertex = heapExtractMin(daVisitare);
-        visitati[contaVisitati] = minVertex;
-        contaVisitati ++;
+        if (contaVisitati < nRighe * nColonne) {
+            visitati[contaVisitati] = minVertex;
+            contaVisitati ++;
+        }
         vicini(minVertex.i, minVertex.j);
         do{
+            if (i + 1 >= 9) break;
             if(isVisited(visitati, arrayCoordinate[i], arrayCoordinate[i+1]) == 0){
                 relax(&minVertex, &graph[arrayCoordinate[i]][arrayCoordinate[i+1]], graph);
                 index = findIndex(daVisitare,arrayCoordinate[i], arrayCoordinate[i+1]);
-                daVisitare[index].d = graph[arrayCoordinate[i]][arrayCoordinate[i+1]].d;
-                heap_decrease(daVisitare, index, daVisitare[index].d);
+                if (index != -1){
+                    daVisitare[index].d = graph[arrayCoordinate[i]][arrayCoordinate[i+1]].d;
+                    heap_decrease(daVisitare, index, daVisitare[index].d);
+                }
             }
             i += 2;
         }
@@ -149,6 +162,7 @@ void vicini(int i, int j){
     int nj;
     int ni;
     int k;
+
 
     for(k=0; k<=8; k++){
         arrayCoordinate[k] = -1;
@@ -228,7 +242,8 @@ int weight(nodo n1, nodo n2){
 }
 
 void relax(nodo* n1, nodo* n2, nodo** graph){
-    long int newCost = n1->d + weight(*n1, *n2) + costoFisso;
+    long int newCost;
+    newCost = n1->d + weight(*n1, *n2) + costoFisso;
     if (n2->d > newCost) {
         n2->d = newCost;
         n2->p = &graph[n1->i][n1->j];
@@ -260,6 +275,7 @@ int isVisited(nodo* visitati, int i, int j){
 
 int findIndex(nodo* heap, int i, int j){
     int k;
+    if (visitati == NULL || contaVisitati < 0) return 0;
     for(k=1; k<= heapSize; k++){
         if(heap[k].i == i && heap[k].j == j){
             return k;
